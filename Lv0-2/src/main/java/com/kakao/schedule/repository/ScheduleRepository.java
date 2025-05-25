@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class ScheduleRepository {
@@ -38,5 +40,31 @@ public class ScheduleRepository {
     } catch (SQLException e) {
       throw new RuntimeException("일정 저장에 실패했습니다...", e);
     }
+  }
+  public List<ScheduleResponse> findAll() {
+    String sql = "SELECT * FROM schedule ORDER BY updated_at DESC";
+    List<ScheduleResponse> result = new ArrayList<>();
+
+    try (Connection conn = dataSource.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery()) {
+
+      while (rs.next()) {
+        ScheduleResponse schedule = new ScheduleResponse(
+            rs.getLong("id"),
+            rs.getString("title"),
+            rs.getString("task"),
+            rs.getString("author"),
+            rs.getTimestamp("created_at").toLocalDateTime(),
+            rs.getTimestamp("updated_at").toLocalDateTime()
+        );
+        result.add(schedule);
+      }
+
+    } catch (SQLException e) {
+      throw new RuntimeException("일정 조회에 실패했습니다.", e);
+    }
+
+    return result;
   }
 }
