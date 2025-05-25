@@ -29,4 +29,13 @@ public class ScheduleController {
     List<ScheduleResponse> schedules = scheduleService.getAllSchedules();
     return ResponseEntity.ok(schedules);
   }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<ScheduleResponse> getScheduleById(@PathVariable Long id) {
+    ScheduleResponse schedule = scheduleService.getScheduleById(id);
+    if (schedule == null) {
+      return ResponseEntity.notFound().build();
+    }
+    return ResponseEntity.ok(schedule);
+  }
 }
