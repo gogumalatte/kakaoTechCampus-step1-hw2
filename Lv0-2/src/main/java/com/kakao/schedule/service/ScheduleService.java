@@ -32,4 +32,8 @@ public class ScheduleService {
   public boolean updateSchedule(Long id, UpdateScheduleRequest request) {
     return scheduleRepository.updateById(id, request);
   }
+
+  public boolean deleteSchedule(Long id, String password) {
+    return scheduleRepository.deleteById(id, password);
+  }
 }

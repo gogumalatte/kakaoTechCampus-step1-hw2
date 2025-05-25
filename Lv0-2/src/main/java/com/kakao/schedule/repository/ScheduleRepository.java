@@ -154,5 +154,4 @@ public class ScheduleRepository {
       throw new RuntimeException("일정 삭제에 실패했습니다.", e);
     }
   }
-
 }
