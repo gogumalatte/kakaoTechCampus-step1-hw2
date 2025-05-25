@@ -2,6 +2,7 @@ package com.kakao.schedule.service;
 
 import com.kakao.schedule.dto.ScheduleRequest;
 import com.kakao.schedule.dto.ScheduleResponse;
+import com.kakao.schedule.dto.UpdateScheduleRequest;
 import com.kakao.schedule.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
@@ -26,5 +27,9 @@ public class ScheduleService {
 
   public ScheduleResponse getScheduleById(Long id) {
     return scheduleRepository.findById(id);
+  }
+
+  public boolean updateSchedule(Long id, UpdateScheduleRequest request) {
+    return scheduleRepository.updateById(id, request);
   }
 }
