@@ -67,4 +67,31 @@ public class ScheduleRepository {
 
     return result;
   }
+
+  public ScheduleResponse findById(Long id) {
+    String sql = "SELECT * FROM schedule WHERE id = ?";
+    try (Connection conn = dataSource.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+      pstmt.setLong(1, id);
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next()) {
+          return new ScheduleResponse(
+              rs.getLong("id"),
+              rs.getString("title"),
+              rs.getString("task"),
+              rs.getString("author"),
+              rs.getTimestamp("created_at").toLocalDateTime(),
+              rs.getTimestamp("updated_at").toLocalDateTime()
+          );
+        } else {
+          return null;
+        }
+      }
+
+    } catch (SQLException e) {
+      throw new RuntimeException("일정 단건 조회에 실패했습니다.", e);
+    }
+  }
+
 }
