@@ -43,33 +43,6 @@ public class ScheduleRepository {
     }
   }
 
-  public List<ScheduleResponse> findAll() {
-    String sql = "SELECT * FROM schedule ORDER BY updated_at DESC";
-    List<ScheduleResponse> result = new ArrayList<>();
-
-    try (Connection conn = dataSource.getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-        ResultSet rs = pstmt.executeQuery()) {
-
-      while (rs.next()) {
-        ScheduleResponse schedule = new ScheduleResponse(
-            rs.getLong("id"),
-            rs.getString("title"),
-            rs.getString("task"),
-            rs.getString("author"),
-            rs.getTimestamp("created_at").toLocalDateTime(),
-            rs.getTimestamp("updated_at").toLocalDateTime()
-        );
-        result.add(schedule);
-      }
-
-    } catch (SQLException e) {
-      throw new RuntimeException("일정 조회에 실패했습니다.", e);
-    }
-
-    return result;
-  }
-
   public List<ScheduleResponse> findAllByCondition(String author, String updatedAt) {
     StringBuilder sql = new StringBuilder("SELECT * FROM schedule WHERE 1=1");
     List<Object> params = new ArrayList<>();
@@ -182,11 +155,11 @@ public class ScheduleRepository {
       checkStmt.setLong(1, id);
       ResultSet rs = checkStmt.executeQuery();
 
-      if (!rs.next()) return false; // 일정 없음
+      if (!rs.next()) return false;
 
       String passwordInDb = rs.getString("password");
       if (!passwordInDb.equals(password)) {
-        return false; // 비밀번호 불일치
+        return false;
       }
 
       try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {

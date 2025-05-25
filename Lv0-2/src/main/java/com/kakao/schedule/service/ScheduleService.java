@@ -21,10 +21,6 @@ public class ScheduleService {
     scheduleRepository.insert(request);
   }
 
-  public List<ScheduleResponse> getAllSchedules() {
-    return scheduleRepository.findAll();
-  }
-
   public List<ScheduleResponse> getSchedulesByCondition(String author, String updatedAt) {
     return scheduleRepository.findAllByCondition(author, updatedAt);
   }
