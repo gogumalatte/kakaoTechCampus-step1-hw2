@@ -32,6 +32,15 @@ public class ScheduleController {
     return ResponseEntity.ok(schedules);
   }
 
+  @GetMapping
+  public ResponseEntity<List<ScheduleResponse>> getSchedules(
+      @RequestParam(required = false) String author,
+      @RequestParam(required = false) String updatedAt
+  ) {
+    List<ScheduleResponse> schedules = scheduleService.getSchedulesByCondition(author, updatedAt);
+    return ResponseEntity.ok(schedules);
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<ScheduleResponse> getScheduleById(@PathVariable Long id) {
     ScheduleResponse schedule = scheduleService.getScheduleById(id);
