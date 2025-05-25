@@ -126,4 +126,33 @@ public class ScheduleRepository {
       throw new RuntimeException("일정 수정에 실패했습니다.", e);
     }
   }
+
+  public boolean deleteById(Long id, String password) {
+    String passwordSql = "SELECT password FROM schedule WHERE id = ?";
+    String deleteSql = "DELETE FROM schedule WHERE id = ?";
+
+    try (Connection conn = dataSource.getConnection();
+        PreparedStatement checkStmt = conn.prepareStatement(passwordSql)) {
+
+      checkStmt.setLong(1, id);
+      ResultSet rs = checkStmt.executeQuery();
+
+      if (!rs.next()) return false; // 일정 없음
+
+      String passwordInDb = rs.getString("password");
+      if (!passwordInDb.equals(password)) {
+        return false; // 비밀번호 불일치
+      }
+
+      try (PreparedStatement deleteStmt = conn.prepareStatement(deleteSql)) {
+        deleteStmt.setLong(1, id);
+        deleteStmt.executeUpdate();
+        return true;
+      }
+
+    } catch (SQLException e) {
+      throw new RuntimeException("일정 삭제에 실패했습니다.", e);
+    }
+  }
+
 }
