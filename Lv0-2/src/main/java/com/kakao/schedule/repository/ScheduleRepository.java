@@ -2,6 +2,7 @@ package com.kakao.schedule.repository;
 
 import com.kakao.schedule.dto.ScheduleRequest;
 import com.kakao.schedule.dto.ScheduleResponse;
+import com.kakao.schedule.dto.UpdateScheduleRequest;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -94,4 +95,35 @@ public class ScheduleRepository {
     }
   }
 
+  public boolean updateById(Long id, UpdateScheduleRequest request) {
+    String passwordSql = "SELECT password FROM schedule WHERE id = ?";
+    String updateSql = "UPDATE schedule SET title = ?, task = ?, author = ?, updated_at = ? WHERE id = ?";
+
+    try (Connection conn = dataSource.getConnection();
+        PreparedStatement checkStmt = conn.prepareStatement(passwordSql)) {
+
+      checkStmt.setLong(1, id);
+      ResultSet rs = checkStmt.executeQuery();
+
+      if (!rs.next()) return false;
+
+      String passwordInDb = rs.getString("password");
+      if (!passwordInDb.equals(request.getPassword())) {
+        return false;
+      }
+
+      try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+        updateStmt.setString(1, request.getTitle());
+        updateStmt.setString(2, request.getTask());
+        updateStmt.setString(3, request.getAuthor());
+        updateStmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+        updateStmt.setLong(5, id);
+        updateStmt.executeUpdate();
+        return true;
+      }
+
+    } catch (SQLException e) {
+      throw new RuntimeException("일정 수정에 실패했습니다.", e);
+    }
+  }
 }
