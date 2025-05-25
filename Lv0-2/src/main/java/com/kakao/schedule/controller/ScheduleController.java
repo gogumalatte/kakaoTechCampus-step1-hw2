@@ -4,11 +4,11 @@ import com.kakao.schedule.dto.ScheduleRequest;
 import com.kakao.schedule.dto.ScheduleResponse;
 import com.kakao.schedule.dto.UpdateScheduleRequest;
 import com.kakao.schedule.service.ScheduleService;
-import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/schedules")
@@ -20,18 +20,14 @@ public class ScheduleController {
     this.scheduleService = scheduleService;
   }
 
+  // 일정 생성
   @PostMapping
   public ResponseEntity<Void> createSchedule(@RequestBody ScheduleRequest request) {
     scheduleService.createSchedule(request);
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping
-  public ResponseEntity<List<ScheduleResponse>> getAllSchedules() {
-    List<ScheduleResponse> schedules = scheduleService.getAllSchedules();
-    return ResponseEntity.ok(schedules);
-  }
-
+  // 전체 조회 + 조건 조회
   @GetMapping
   public ResponseEntity<List<ScheduleResponse>> getSchedules(
       @RequestParam(required = false) String author,
@@ -41,6 +37,7 @@ public class ScheduleController {
     return ResponseEntity.ok(schedules);
   }
 
+  // 단건 조회
   @GetMapping("/{id}")
   public ResponseEntity<ScheduleResponse> getScheduleById(@PathVariable Long id) {
     ScheduleResponse schedule = scheduleService.getScheduleById(id);
@@ -50,6 +47,7 @@ public class ScheduleController {
     return ResponseEntity.ok(schedule);
   }
 
+  // 일정 수정
   @PutMapping("/{id}")
   public ResponseEntity<String> updateSchedule(
       @PathVariable Long id,
@@ -63,6 +61,7 @@ public class ScheduleController {
     }
   }
 
+  // 일정 삭제
   @DeleteMapping("/{id}")
   public ResponseEntity<String> deleteSchedule(
       @PathVariable Long id,
