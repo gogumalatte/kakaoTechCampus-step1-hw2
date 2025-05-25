@@ -1,8 +1,11 @@
 package com.kakao.schedule.service;
 
 import com.kakao.schedule.dto.ScheduleRequest;
+import com.kakao.schedule.dto.ScheduleResponse;
 import com.kakao.schedule.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ScheduleService {
@@ -17,5 +20,7 @@ public class ScheduleService {
     scheduleRepository.insert(request);
   }
 
-  // 나중에 전체 조회, 단건 조회 메서드 추가 예정.
+  public List<ScheduleResponse> getAllSchedules() {
+    return scheduleRepository.findAll();
+  }
 }
