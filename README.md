@@ -1,5 +1,5 @@
 # kakaoTechCampus-step1-hw2
-## Lv 0
+## Lv 0 API 명세 및 ERD, SQL 작성
 ### API 명세서 작성
 | 기능       | Method | URL             | request                          | response  | 상태코드                                       |
 | -------- | ------ | --------------- | -------------------------------- | --------- | ------------------------------------------ |
@@ -8,5 +8,9 @@
 | 일정 목록 조회 | GET    | /schedules      | 요청 param (`writer`, `updatedAt`) | 다건 응답 정보  | 200: 정상조회                                  |
 | 일정 수정    | PUT    | /schedules/{id} | 요청 body (수정 데이터 + 비밀번호)          | 수정된 일정 정보 | 200: 정상수정<br>403: 비밀번호 불일치<br>404: 존재하지 않음 |
 | 일정 삭제    | DELETE | /schedules/{id} | 요청 body (비밀번호)                   | -         | 200: 정상삭제<br>403: 비밀번호 불일치<br>404: 존재하지 않음 |
-
 <br/>
+
+### ERD 작성
+<img width="387" alt="image" src="https://github.com/user-attachments/assets/b95845a1-36cc-4440-bb33-1c247663a06e" />
+<br/>
+
