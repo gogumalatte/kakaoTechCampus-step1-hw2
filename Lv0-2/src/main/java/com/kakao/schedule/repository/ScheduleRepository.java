@@ -42,6 +42,7 @@ public class ScheduleRepository {
       throw new RuntimeException("일정 저장에 실패했습니다...", e);
     }
   }
+
   public List<ScheduleResponse> findAll() {
     String sql = "SELECT * FROM schedule ORDER BY updated_at DESC";
     List<ScheduleResponse> result = new ArrayList<>();
@@ -64,6 +65,50 @@ public class ScheduleRepository {
 
     } catch (SQLException e) {
       throw new RuntimeException("일정 조회에 실패했습니다.", e);
+    }
+
+    return result;
+  }
+
+  public List<ScheduleResponse> findAllByCondition(String author, String updatedAt) {
+    StringBuilder sql = new StringBuilder("SELECT * FROM schedule WHERE 1=1");
+    List<Object> params = new ArrayList<>();
+
+    if (author != null && !author.isBlank()) {
+      sql.append(" AND author = ?");
+      params.add(author);
+    }
+    if (updatedAt != null && !updatedAt.isBlank()) {
+      sql.append(" AND DATE(updated_at) = ?");
+      params.add(Date.valueOf(updatedAt));
+    }
+
+    sql.append(" ORDER BY updated_at DESC");
+
+    List<ScheduleResponse> result = new ArrayList<>();
+
+    try (Connection conn = dataSource.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
+
+      for (int i = 0; i < params.size(); i++) {
+        pstmt.setObject(i + 1, params.get(i));
+      }
+
+      try (ResultSet rs = pstmt.executeQuery()) {
+        while (rs.next()) {
+          result.add(new ScheduleResponse(
+              rs.getLong("id"),
+              rs.getString("title"),
+              rs.getString("task"),
+              rs.getString("author"),
+              rs.getTimestamp("created_at").toLocalDateTime(),
+              rs.getTimestamp("updated_at").toLocalDateTime()
+          ));
+        }
+      }
+
+    } catch (SQLException e) {
+      throw new RuntimeException("조건별 일정 조회에 실패했습니다.", e);
     }
 
     return result;
