@@ -23,4 +23,8 @@ public class ScheduleService {
   public List<ScheduleResponse> getAllSchedules() {
     return scheduleRepository.findAll();
   }
+
+  public ScheduleResponse getScheduleById(Long id) {
+    return scheduleRepository.findById(id);
+  }
 }
