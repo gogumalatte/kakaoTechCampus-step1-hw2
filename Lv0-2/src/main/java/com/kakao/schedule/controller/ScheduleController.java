@@ -2,6 +2,7 @@ package com.kakao.schedule.controller;
 
 import com.kakao.schedule.dto.ScheduleRequest;
 import com.kakao.schedule.dto.ScheduleResponse;
+import com.kakao.schedule.dto.UpdateScheduleRequest;
 import com.kakao.schedule.service.ScheduleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,5 +38,18 @@ public class ScheduleController {
       return ResponseEntity.notFound().build();
     }
     return ResponseEntity.ok(schedule);
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<String> updateSchedule(
+      @PathVariable Long id,
+      @RequestBody UpdateScheduleRequest request
+  ) {
+    boolean updated = scheduleService.updateSchedule(id, request);
+    if (updated) {
+      return ResponseEntity.ok("일정이 수정되었습니다.");
+    } else {
+      return ResponseEntity.status(403).body("비밀번호가 일치하지 않거나 일정이 존재하지 않습니다.");
+    }
   }
 }
