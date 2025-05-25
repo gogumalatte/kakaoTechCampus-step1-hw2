@@ -25,6 +25,10 @@ public class ScheduleService {
     return scheduleRepository.findAll();
   }
 
+  public List<ScheduleResponse> getSchedulesByCondition(String author, String updatedAt) {
+    return scheduleRepository.findAllByCondition(author, updatedAt);
+  }
+
   public ScheduleResponse getScheduleById(Long id) {
     return scheduleRepository.findById(id);
   }
